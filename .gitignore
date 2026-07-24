@@ -1,0 +1,24 @@
+# directories
+.vscode/
+
+# files
+
+## python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+## model checkpoints
+*ckpt
+
+## build cache
+*.egg-info/
+*.egg
+
+## C extensions
+*.so
+
+## env
+.env
+

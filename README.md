@@ -2,6 +2,34 @@
 
 This a template repo for project initialization.
 
+## Introduction
+
+current code architecture:
+
+├── assets
+├── code
+│   ├── configs
+│   │   ├── config.py
+│   │   └── __init__.py
+│   ├── plan
+│   │   └── __init__.py
+│   ├── execute
+│   │   └── __init__.py
+│   ├── utils
+│   │   └── __init__.py
+│   └── __init__.py
+├── data
+│   └── data.md
+├── docs
+│   └── architecture.md
+├── env
+│   └── requirements.txt
+├── CLAUDE.md
+├── README.md
+└── run.sh
+
+`code/plan` and `code/execute` are just suggestion.
+
 ## Usage
 
 1. clone this repo.
