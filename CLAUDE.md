@@ -32,4 +32,5 @@ use `/init` in CLAUDE for directly create this doc.
    3. 主程序入口: `TODO`
 3. 分支配置
    1. 当前项目基于git进行管理
+      1. 每次读取代码内容之前注意先 `git branch` 读取当前所在分支
    2. 当前分支: `TODO`

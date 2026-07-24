@@ -6,6 +6,7 @@ This a template repo for project initialization.
 
 current code architecture:
 
+```text
 ├── assets
 ├── code
 │   ├── configs
@@ -27,6 +28,7 @@ current code architecture:
 ├── CLAUDE.md
 ├── README.md
 └── run.sh
+```
 
 `code/plan` and `code/execute` are just suggestion.
 
