@@ -10,14 +10,16 @@ current code architecture:
 ├── assets
 ├── code
 │   ├── configs
-│   │   ├── config.py
-│   │   └── __init__.py
+│   │   └── default.yaml
 │   ├── plan
 │   │   └── __init__.py
 │   ├── execute
 │   │   └── __init__.py
+│   ├── scripts
+│   │   └── main.py
 │   ├── utils
-│   │   └── __init__.py
+│   │   ├── config.py
+│   │   └── logger.py
 │   └── __init__.py
 ├── data
 │   └── data.md
