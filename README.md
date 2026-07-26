@@ -14,7 +14,7 @@ current code architecture:
 │   ├── plan
 │   │   └── __init__.py
 │   ├── execute
-│   │   └── __init__.py
+│   │   └── net_manager.py
 │   ├── scripts
 │   │   └── main.py
 │   ├── utils
