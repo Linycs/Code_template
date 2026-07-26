@@ -1,15 +1,18 @@
 import os, sys
 
-cwd = os.path.abspath(os.path.dirname(__file__)) # core
+cwd = os.path.abspath(os.path.dirname(__file__))
 code_root = os.path.abspath(os.path.join(cwd, '..'))# code
 if code_root not in sys.path:
     sys.path.insert(0, code_root)
 
-from utils.config import parse_args
+from plan.planner import parse_args
+from utils.config import CfgParser, initialize_paths
 from utils.logger import Logger
 
 # args
-cfg_path, cfg_parser = parse_args()
+planner = parse_args()
+cfg_parser = CfgParser(config_path=planner.new_cfg_path)
+initialize_paths(cfg_parser)
 
 # log
 logger = Logger(os.path.join(

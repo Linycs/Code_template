@@ -1,8 +1,5 @@
 output: 
   root: output
-  prefix: demo
-  suffix: ''
-  timestamp: false
   structure:
     sub_dirs:
       - log
