@@ -40,6 +40,8 @@ class Request_manager:
         self.session = requests.Session()
         self.session.proxies = cfg_parser['requests.proxies']
 
+        self.last_request_time = time.time()
+
     def _rate_limit(self):
         """速率限制"""
         
