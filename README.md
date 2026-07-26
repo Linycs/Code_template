@@ -12,7 +12,7 @@ current code architecture:
 │   ├── configs
 │   │   └── default.yaml
 │   ├── plan
-│   │   └── __init__.py
+│   │   └── planner.py
 │   ├── execute
 │   │   └── net_manager.py
 │   ├── scripts

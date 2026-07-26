@@ -117,20 +117,7 @@ def initialize_paths(cfg_parser: CfgParser, ):
     创建本次输出目录并写回配置：
     同时保存 config.yaml 快照并备份代码目录（output.backup）。
     """
-    root = cfg_parser["output.root"]
-    prefix = cfg_parser["output.prefix"]
-    suffix = cfg_parser["output.suffix"]
-
-    if prefix == '' and suffix == '':
-        timestamp = time.strftime("%Y%m%d-%H%M%S")
-    elif cfg_parser["output.timestamp"]:
-        timestamp = time.strftime("%Y%m%d-%H%M%S")
-    else:
-        timestamp = ""
-    
-    output_dir = os.path.join(root, f'{prefix}{timestamp}{suffix}')
-
-    cfg_parser.add_cfg("output.output_dir", output_dir, mode="override")
+    output_dir = cfg_parser["output.concrete_dir"]
 
     sub_cfg = cfg_parser["output.structure.sub_dirs"]
     path_dict = recursive_create_dirs(sub_cfg, output_dir)
@@ -147,27 +134,3 @@ def initialize_paths(cfg_parser: CfgParser, ):
             shutil.rmtree(dst)
         shutil.copytree(src, dst)
         print(f" [+] Backup: {src} -> {dst}")
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description="Hand-Object Optimization Config Parser")
-    parser.add_argument("--config", type=str, default="configs/config.yaml")
-    parser.add_argument("--prefix", type=str, default='', help="prefix of exp output dir")
-    parser.add_argument("--suffix", type=str, default='', help="suffix of exp output dir")
-
-    args = parser.parse_args()
-    cfg_path = args.config
-
-    cfg_parser = CfgParser(config_path=cfg_path)
-    if args.prefix != '':
-        cfg_parser.add_cfg("output.prefix", args.prefix, mode="override")
-    if args.suffix != '':
-        cfg_parser.add_cfg("output.suffix", args.suffix, mode="override")
-
-    initialize_paths(cfg_parser, )
-    return cfg_path, cfg_parser
-
-
-if __name__ == "__main__":
-    cfg_path, cfg_parser = parse_args()
-    print(f"[Config] Loaded config from: {cfg_path}")
