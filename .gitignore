@@ -1,7 +1,10 @@
 # directories
 .vscode/
+output*/
 
 # files
+
+# other
 
 ## python cache
 __pycache__/

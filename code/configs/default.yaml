@@ -1,0 +1,16 @@
+output: 
+  root: output
+  prefix: demo
+  suffix: ''
+  timestamp: false
+  structure:
+    sub_dirs:
+      - log
+      - backup
+      - results
+    paths: {}
+  backup:
+    - code
+
+logging:
+  filename: record.log

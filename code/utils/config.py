@@ -10,7 +10,6 @@ class CfgParser:
     """
     YAML 配置包装器：
     - 支持点分 key 访问：cfg['output.root'] 等价于 cfg.cfg['output']['root']
-    - 支持点分 key 写入：add_cfg('optimization.stage', 'stage1', mode='override')
     - cfg.cfg 保存原始 dict（必要时可直接取原始 stage 配置）
     """
 
@@ -73,13 +72,7 @@ class CfgParser:
         self.add_cfg(name, value, mode="override")
 
     # def tree(self, cfg:None, max_depth=None, depth=0):
-    #     if cfg is None:
-    #         cfg = self.cfg
-        
-    #     if isinstance(cfg, dict):
-    #         for k, v in cfg.items():
-    #             print(f"{k}:")
-    #             self.tree(v, max_depth, depth+1)
+    #     TODO
 
 def recursive_create_dirs(path_cfg, parent_dir: str):
     """
@@ -89,7 +82,6 @@ def recursive_create_dirs(path_cfg, parent_dir: str):
     path_dict = {}
 
     if isinstance(path_cfg, dict):
-        # e.g. {"vis": ["initial", "optimized"]}
         for key, sub_cfg in path_cfg.items():
             sub_dir = os.path.join(parent_dir, key)
             os.makedirs(sub_dir, exist_ok=True)
@@ -99,7 +91,6 @@ def recursive_create_dirs(path_cfg, parent_dir: str):
             path_dict.update(new_dict)
 
     elif isinstance(path_cfg, list):
-        # e.g. ["log", "backup", {"vis": [...]}, "results"]
         for item in path_cfg:
             new_dict = recursive_create_dirs(item, parent_dir)
             _check_conflict(path_dict, new_dict)
@@ -121,33 +112,29 @@ def _check_conflict(base_dict, new_dict):
             raise KeyError(f"[PathConflict] Duplicate directory alias key: {k}")
 
 
-def initialize_paths(cfg_parser: CfgParser, stage: str):
+def initialize_paths(cfg_parser: CfgParser, ):
     """
     创建本次输出目录并写回配置：
-    - output.output_dir：outputs/<stage>/<timestamp>
-    - output.structure.concrete_dir：alias->path 扁平路径索引
     同时保存 config.yaml 快照并备份代码目录（output.backup）。
     """
-    timestamp = time.strftime("%Y%m%d-%H%M%S")
-    
     root = cfg_parser["output.root"]
     prefix = cfg_parser["output.prefix"]
     suffix = cfg_parser["output.suffix"]
-    if not prefix:
-        if 'mano_param_seq_dir' in cfg_parser['input']:
-            prefix = cfg_parser['input.mano_param_seq_dir'].split('/')[-1] + '-'
-        elif 'hoi_param_fpath' in cfg_parser['input']:
-            prefix = cfg_parser['input.hoi_param_fpath'].split('/')[-1] + '-'
-        else:
-            prefix = ''
-    suffix = ('-' + suffix) if suffix else ''
-    output_dir = os.path.join(root, stage, f'{prefix}{timestamp}{suffix}')
+
+    if prefix == '' and suffix == '':
+        timestamp = time.strftime("%Y%m%d-%H%M%S")
+    elif cfg_parser["output.timestamp"]:
+        timestamp = time.strftime("%Y%m%d-%H%M%S")
+    else:
+        timestamp = ""
+    
+    output_dir = os.path.join(root, f'{prefix}{timestamp}{suffix}')
 
     cfg_parser.add_cfg("output.output_dir", output_dir, mode="override")
 
     sub_cfg = cfg_parser["output.structure.sub_dirs"]
     path_dict = recursive_create_dirs(sub_cfg, output_dir)
-    cfg_parser.add_cfg("output.structure.concrete_dir", path_dict, mode="override")
+    cfg_parser.add_cfg("output.structure.paths", path_dict, mode="override")
 
     cfg_parser.dump(os.path.join(output_dir, "config.yaml"))
 
@@ -163,34 +150,21 @@ def initialize_paths(cfg_parser: CfgParser, stage: str):
 
 
 def parse_args():
-    """命令行参数 > YAML：stage/start/end 作为 runtime 覆盖写回 optimization.*。"""
     parser = argparse.ArgumentParser(description="Hand-Object Optimization Config Parser")
     parser.add_argument("--config", type=str, default="configs/config.yaml")
-    parser.add_argument("--stage", type=str, default="stage1", help="format= stage[num] or stage[num]-[num]")
-    parser.add_argument("--hoi_param_fpath", type=str, default=None)
-    # parser.add_argument("--start_frame", type=int, default=0)
-    # parser.add_argument("--end_frame", type=int, default=None)
-    parser.add_argument("--prefix", type=str, default=None)
+    parser.add_argument("--prefix", type=str, default='', help="prefix of exp output dir")
+    parser.add_argument("--suffix", type=str, default='', help="suffix of exp output dir")
 
     args = parser.parse_args()
     cfg_path = args.config
 
     cfg_parser = CfgParser(config_path=cfg_path)
-    if args.hoi_param_fpath is not None:
-        cfg_parser['input.hoi_param_fpath'] = args.hoi_param_fpath
-    if args.prefix is not None:
-        cfg_parser['output.prefix'] = args.prefix
+    if args.prefix != '':
+        cfg_parser.add_cfg("output.prefix", args.prefix, mode="override")
+    if args.suffix != '':
+        cfg_parser.add_cfg("output.suffix", args.suffix, mode="override")
 
-    if '-' in args.stage:
-        first_stage_name = args.stage.split('-')[0]
-    else:
-        first_stage_name = args.stage
-    cfg_parser.add_cfg("optimization.stage", first_stage_name, mode="override")
-    cfg_parser.add_cfg("optimization.all_stage", args.stage, mode="override")
-    # cfg_parser.add_cfg("optimization.start_frame", args.start_frame, mode="override")
-    # cfg_parser.add_cfg("optimization.end_frame", args.end_frame, mode="override")
-
-    initialize_paths(cfg_parser, args.stage)
+    initialize_paths(cfg_parser, )
     return cfg_path, cfg_parser
 
 
