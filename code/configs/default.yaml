@@ -14,3 +14,17 @@ output:
 
 logging:
   filename: record.log
+
+requests:
+  timeout: 10
+  retries: 3
+  sleep_time: 2
+  proxies:
+    http: http://127.0.0.1:7897
+    https: https://127.0.0.1:7897
+  ssl_verify: true
+  max_trial: 5
+
+download:
+  thread: 5
+  
