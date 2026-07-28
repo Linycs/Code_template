@@ -36,7 +36,8 @@ install_apt_software() {
         wget \
         ssh \
         npm \
-        tmux
+        tmux \
+        net-tools
     # clean up
     $apt_command clean
 }
@@ -89,7 +90,7 @@ config_softwares() {
     sudo dpkg -i code*.deb
 
     # install extensions in vscode
-    # list: python, tabout, better comments, docker, remote-ssh, remote development, git graph
+    # list: python, tabout, better comments, docker, remote-ssh, remote development, git graph, markdown-all-in-one, markdownlint, markdown preview enhanced, 
 
     ## microsoft edge
     wget https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_150.0.4078.105-1_amd64.deb?brand=M102
@@ -160,6 +161,30 @@ requires_openai_auth = true' > $codex_config_path
 }' > $codex_api_path
 }
 
+config_conda() {
+    CONDA_DIR="${software}/miniconda3"
+    MINICONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+    # ! conda
+    curl --http1.1 -fSL --retry 8 --retry-all-errors --retry-delay 5 --connect-timeout 30 \
+            -o /tmp/miniconda.sh "${MINICONDA_URL}" \
+        && test -s /tmp/miniconda.sh \
+        && bash /tmp/miniconda.sh -b -p "${CONDA_DIR}" \
+        && rm /tmp/miniconda.sh \
+        && conda config --system --set auto_update_conda false \
+        && conda config --system --set channel_priority strict \
+        && conda clean -afy
+
+    $CONDA_DIR/bin/conda init
+    source ~/.bashrc
+    conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+    conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+    conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+    conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/msys2/
+    conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+    conda config --set show_channel_urls yes
+}
+
 # 配置软件
 config_softwares
 install_apt_software
@@ -170,3 +195,5 @@ config_ssh
 config_cc
 # 安装 codex
 config_codex
+# 配置 conda
+config_conda
