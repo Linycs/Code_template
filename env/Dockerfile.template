@@ -1,0 +1,75 @@
+# syntax=docker/dockerfile:1
+FROM nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG PYTHON_VERSION=3.10
+ARG TORCH_VERSION=2.5.1
+ARG TORCHVISION_VERSION=0.20.1
+ARG TORCHAUDIO_VERSION=2.5.1
+ARG CUDA_WHEEL=cu124
+ARG INSTALL_VIPE=0
+ARG MAX_JOBS=8
+ARG TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6;8.9;9.0"
+ARG MINICONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+ENV CONDA_DIR=/opt/conda \
+    CUDA_HOME=/usr/local/cuda \
+    CUDA_PATH=/usr/local/cuda \
+    FORCE_CUDA=1 \
+    MAX_JOBS=${MAX_JOBS} \
+    TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST} \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_ROOT_USER_ACTION=ignore \
+    PYTHON_VERSION=${PYTHON_VERSION} \
+    TORCH_VERSION=${TORCH_VERSION} \
+    TORCHVISION_VERSION=${TORCHVISION_VERSION} \
+    TORCHAUDIO_VERSION=${TORCHAUDIO_VERSION} \
+    CUDA_WHEEL=${CUDA_WHEEL} \
+    INSTALL_VIPE=${INSTALL_VIPE} \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYOPENGL_PLATFORM=egl
+ENV PATH=${CONDA_DIR}/bin:${CUDA_HOME}/bin:${PATH}
+ENV LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        ca-certificates \
+        cmake \
+        curl \
+        ffmpeg \
+        git \
+        libegl1 \
+        libgl1 \
+        libglib2.0-0 \
+        libsm6 \
+        libxext6 \
+        libxrender1 \
+        ninja-build \
+        pkg-config \
+        wget \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl --http1.1 -fSL --retry 8 --retry-all-errors --retry-delay 5 --connect-timeout 30 \
+        -o /tmp/miniconda.sh "${MINICONDA_URL}" \
+    && test -s /tmp/miniconda.sh \
+    && bash /tmp/miniconda.sh -b -p "${CONDA_DIR}" \
+    && rm /tmp/miniconda.sh \
+    && conda config --system --set auto_update_conda false \
+    && conda config --system --set channel_priority strict \
+    && conda clean -afy
+
+RUN conda init \
+    && source ~/.bashrc \
+    && conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/ \
+    && conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/ \
+    && conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/ \
+    && conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/msys2/ \
+    && conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/ \
+    conda config --set show_channel_urls yes
+
+WORKDIR /workspace/projects/research/hand_recon/HandFlow
+
+CMD ["/bin/bash"]

@@ -40,8 +40,10 @@ current code architecture:
 2. remove .git file to clean previous unnecessary commit history.
 3. remove/clean this README.md for new content.
 4. update CLAUDE.md for repo setting.(especially `TODO`)
+5. install packages in env/requirements.txt
 
 ## TODO
 
-1. [ ] update code in config.py
-2. [ ] other
+1. gui connection between docker and pc.
+2. a bash that automatically update all `TODO` region within this repo.
+3. a bash that install necessary softwares/packages on a new linux pc.
