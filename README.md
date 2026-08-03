@@ -46,5 +46,5 @@ current code architecture:
 
 1. gui connection between docker and pc.
 2. a bash that automatically update all `TODO` region within this repo.
-3. a bash that install necessary softwares/packages on a new linux pc.
+3. a bash that create necessary files in other cloned repo.
 4. option to backup code or not.

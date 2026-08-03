@@ -37,7 +37,10 @@ install_apt_software() {
         ssh \
         npm \
         tmux \
-        net-tools
+        net-tools \
+        htop \
+        nvtop \
+        tree
     # clean up
     $apt_command clean
 }
@@ -101,11 +104,18 @@ config_softwares() {
 
     # snipaste
     wget https://download.snipaste.com/archives/Snipaste-2.11.3-x86_64.AppImage
-}
+    chmod +x Snipaste-2.11.3-x86_64.AppImage
 
-# ! ai tools
-# 读取 api_key
-read -p "请输入你的API_KEY: " api_key
+    # blender
+    wget https://mirror.twds.com.tw/blender/release/Blender4.5/blender-4.5.12-linux-x64.tar.xz
+    tar -xf blender-4.5.12-linux-x64.tar.xz
+    # 记录 blender 文件夹路径
+    blender_dir=$(pwd)/blender-4.5.12-linux-x64
+    # 提示用户修改 desktop 文件
+    echo "Blender 已安装，路径为: $blender_dir"
+    echo "请手动修改 desktop 文件以添加 Blender 的快捷方式, 修改字段: Exec=$blender_dir/blender, Icon=$blender_dir/blender.svg, Name=Blender"
+    echo "修改后请将 desktop 文件移动到 ~/.local/share/applications/ 目录下，以便在应用菜单中显示 Blender。"
+}
 
 config_cc() {
     sudo npm install -g @anthropic-ai/claude-code
@@ -185,15 +195,39 @@ config_conda() {
     conda config --set show_channel_urls yes
 }
 
+config_docker() {
+    if [ "$EUID" -eq 0 ]; then
+        apt_command="apt"
+    else
+        apt_command="sudo apt"
+    fi
+    $apt_command install -y apt-transport-https ca-certificates curl software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o docker.gpg
+    sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg docker.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    $apt_command update
+    $apt_command install -y docker-ce docker-ce-cli containerd.io
+
+    sudo systemctl start docker
+    sudo systemctl enable docker
+}
+
 # 配置软件
 config_softwares
 install_apt_software
+
 # 配置 ssh, git
 config_git
 config_ssh
+
+# ! ai tools
+# 读取 api_key
+read -p "请输入你的API_KEY: " api_key
 # 安装 cc
 config_cc
 # 安装 codex
 config_codex
+
 # 配置 conda
 config_conda
+config_docker
