@@ -1,4 +1,4 @@
-# CLAUDE
+# AGENTS
 
 use `/init` in CLAUDE for directly create this doc.
 
@@ -33,7 +33,13 @@ use `/init` in CLAUDE for directly create this doc.
 ## Repo setting
 
 1. 代码说明
-   1. 代码结构见 docs/architecture.md
+   1. 代码结构文档见 docs/architecture.md
+   2. 用户要求分析、检查、评估、给方案或询问建议时，只允许执行只读操作。
+   3. 修改文件、创建文件、移动数据、安装依赖、运行会产生输出的程序前，必须获得用户对该事项的明确授权。
+   4. 混合请求需要拆分：已明确授权的部分可以执行，其余部分只给方案。
+   5. 授权仅覆盖用户明确指定的范围，不得自行扩展到相关但未授权的修改。
+   6. 第一次写操作前，需要先说明“本轮授权范围”；如果没有明确授权，则给出方案并结束当前轮等待确认。
+   7. 用户确认方案后才能执行；在 commentary 中描述方案不等于获得授权。
 2. 运行配置
    1. conda运行环境: `conda_env`
    2. docker路径映射：
