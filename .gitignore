@@ -1,6 +1,7 @@
 # directories
 .vscode/
 output*/
+.qoder/
 
 # files
 
