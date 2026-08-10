@@ -7,6 +7,11 @@ This a template repo for project initialization.
 current code architecture:
 
 ```text
+├── _linycs
+│   └── docs
+│       ├── architecture.md
+│       ├── fsys_template.md
+│       └── prompts.md
 ├── assets
 ├── code
 │   ├── configs
@@ -23,11 +28,12 @@ current code architecture:
 │   └── __init__.py
 ├── data
 │   └── data.md
-├── docs
-│   └── architecture.md
 ├── env
+│   ├── docker-compose.yml
+│   ├── Dockerfile.template
+│   ├── init_softwares.sh
 │   └── requirements.txt
-├── CLAUDE.md
+├── AGENTS.md
 ├── README.md
 └── run.sh
 ```
