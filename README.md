@@ -10,6 +10,8 @@ current code architecture:
 ├── _linycs
 │   └── docs
 │       ├── architecture.md
+│       ├── design.md
+│       ├── doc-maintenance.md
 │       ├── fsys_template.md
 │       └── prompts.md
 ├── assets
@@ -22,9 +24,13 @@ current code architecture:
 │   │   └── __init__.py
 │   ├── scripts
 │   │   └── main.py
+│   ├── test_debug
+│   │   └── .gitignore
 │   ├── utils
 │   │   ├── config.py
-│   │   └── logger.py
+│   │   ├── logger.py
+│   │   ├── statistics.py
+│   │   └── visualization.py
 │   └── __init__.py
 ├── data
 │   └── data.md
@@ -45,8 +51,11 @@ current code architecture:
 1. clone this repo.
 2. remove .git file to clean previous unnecessary commit history.
 3. remove/clean this README.md for new content.
-4. update CLAUDE.md for repo setting.(especially `TODO`)
-5. install packages in env/requirements.txt
+4. update `AGENTS.md` for repo settings, especially every `TODO`.
+5. replace the TODO sections in `_linycs/docs/design.md`, and keep both maintained docs fresh according to `_linycs/docs/doc-maintenance.md`.
+6. install packages in `env/requirements.txt`.
+
+`code/test_debug/` is an ignored placeholder for disposable test/debug implementations. Keep reusable utilities and long-lived regression tests in tracked modules instead.
 
 ## TODO
 

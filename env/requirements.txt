@@ -1,3 +1,5 @@
 termcolor
 pyyaml
 OmegaConf
+numpy
+matplotlib
