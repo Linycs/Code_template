@@ -1,10 +1,9 @@
-# CLAUDE
+# AGENTS
 
-use `/init` in CLAUDE for directly create this doc.
+use `/init` in AGENTS for directly create this doc.
 
 ## Global namespace
 
-- USER: TODO
 - conda_env: TODO
 - git_branch: TODO
 - code_entrance: TODO
@@ -12,7 +11,7 @@ use `/init` in CLAUDE for directly create this doc.
 ## Global setting
 
 1. 行为配置
-   1. 所有回复都以 “Hello, `USER`” 开头，回复均用中文。
+   1. 所有回复都以 “Hello, linycs” 开头，回复均用中文。
    2. 当我没有明确说可以开始写代码的情况下，默认都先给方案
       1. 给方案的时候，涉及代码调整的部分不要模棱两可的说思路，至少需要将修改的代码文件/类/函数/位置简要说明。
 2. 代码风格
@@ -26,6 +25,14 @@ use `/init` in CLAUDE for directly create this doc.
       4. 部分场景下的面向对象编程与数量有关，例如单/双/多视角的相机类、单/双数量的人/手参数化类。
    3. 调用层次
       1. code/utils 下的代码只能调用 code/utils 下的代码 或 python package 下的，不允许调用对项目中其他代码有依赖关系
+   4. 临时测试与调试
+      1. 一次性测试、调试所需的类和函数统一放在 `code/test_debug/`，该目录默认不进入 Git；需要长期保留的回归测试应放入单独的、受 Git 跟踪的 `tests/`。
+      2. 测试期间可以从正式代码临时 import `code/test_debug/` 中的实现，并插入最小调用 hook；不要在 `code/test_debug/` 中复制一套完整主流程。
+      3. 测试专用的统计、断言、日志和输出组织应收敛在 `code/test_debug/`；正式代码只传递测试确实需要的最小运行上下文，不承载测试分析逻辑。
+      4. 正式代码中的临时 import、参数和调用必须使用成对的 `TEST_DEBUG_BEGIN` / `TEST_DEBUG_END` 注释标记，便于集中 review 和删除。
+      5. 测试结束后应同时删除 `code/test_debug/` 中的一次性实现、正式代码中的全部临时 hook，以及仅为该测试增加的配置和依赖。
+      6. 清理后运行 `rg -n "test_debug|TEST_DEBUG" code` 检查残留，并确认正式代码可在没有 `code/test_debug/` 实现的情况下独立运行。
+      7. 不允许提交依赖被忽略 `code/test_debug/` 文件的正式代码。
 3. 信息更新
    1. 写代码需要附带注释
    2. 代码文档维护统一遵循 `_linycs/docs/doc-maintenance.md`
@@ -42,12 +49,13 @@ use `/init` in CLAUDE for directly create this doc.
 1. 代码说明
    1. 代码结构见 `_linycs/docs/architecture.md`
    2. 系统设计见 `_linycs/docs/design.md`
-   3. 用户要求分析、检查、评估、给方案或询问建议时，只允许执行只读操作。
-   4. 修改文件、创建文件、移动数据、安装依赖、运行会产生输出的程序前，必须获得用户对该事项的明确授权。
-   5. 混合请求需要拆分：已明确授权的部分可以执行，其余部分只给方案。
-   6. 授权仅覆盖用户明确指定的范围，不得自行扩展到相关但未授权的修改。
-   7. 第一次写操作前，需要先说明“本轮授权范围”；如果没有明确授权，则给出方案并结束当前轮等待确认。
-   8. 用户确认方案后才能执行；在 commentary 中描述方案不等于获得授权。
+   3. 编程风格与设计原则见 `_linycs/docs/coding_style.md`
+   4. 用户要求分析、检查、评估、给方案或询问建议时，只允许执行只读操作。
+   5. 修改文件、创建文件、移动数据、安装依赖、运行会产生输出的程序前，必须获得用户对该事项的明确授权。
+   6. 混合请求需要拆分：已明确授权的部分可以执行，其余部分只给方案。
+   7. 授权仅覆盖用户明确指定的范围，不得自行扩展到相关但未授权的修改。
+   8. 第一次写操作前，需要先说明“本轮授权范围”；如果没有明确授权，则给出方案并结束当前轮等待确认。
+   9. 用户确认方案后才能执行；在 commentary 中描述方案不等于获得授权。
 2. 运行配置
    1. conda运行环境: `conda_env`
    2. docker路径映射：
@@ -59,7 +67,7 @@ use `/init` in CLAUDE for directly create this doc.
       1. 每次读取代码内容之前注意先 `git branch` 读取当前所在分支
    2. 当前分支: `git_branch`
 4. 文件系统
-   1. _`USER` 用来放需要 git 追踪且与项目代码关联较弱的实验性代码、文档等
+   1. _linycs 用来放需要 git 追踪且与项目代码关联较弱的实验性代码、文档等
       1. 项目维护文档统一放在 `_linycs/docs/`
    2. _local 用来放不应被 git 追踪的本地运行代码、文档等
       1. _local/ai_log 用于存放 ai 工作过程的输出，文件格式为 "{Agent_name}_{timestamp}.log", 比如 claude_260731-140800.log
