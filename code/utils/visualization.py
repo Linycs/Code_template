@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 from pathlib import Path
 
 import matplotlib
@@ -13,6 +14,20 @@ from matplotlib.patches import Patch
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import numpy as np
 
+class ColorPalette:
+    """从 matplotlib 色板中按色系和深浅取得归一化 RGB。"""
+
+    FAMILIES = {
+        "warm": "Oranges",
+        "cool": "Blues",
+        "green": "Greens",
+    }
+    SHADES = {"light": 0.55, "dark": 0.80}
+
+    @classmethod
+    def get(cls, family, shade):
+        color = matplotlib.colormaps[cls.FAMILIES[family]](cls.SHADES[shade])
+        return tuple(float(value) for value in color[:3])
 
 class VisMultiShape:
     """在同一坐标系中管理多个 point cloud/mesh，并按指定路径导出。"""
@@ -22,54 +37,32 @@ class VisMultiShape:
         self.unit = str(unit)
         self.shapes = []
 
-    def add_point_cloud(
+    def add_shape(
         self,
-        points,
+        vertices,
         color,
         label: str,
+        faces=None,
         point_size: float = 2.0,
         alpha: float = 0.72,
     ) -> "VisMultiShape":
-        """加入 ``(N,3)`` 点云；颜色使用归一化 RGB。"""
-        vertices = self._vertices(points)
-        assert point_size > 0 and 0.0 <= alpha <= 1.0
-        self.shapes.append(
-            {
-                "geometry_type": "point_cloud",
-                "vertices": vertices,
-                "faces": None,
-                "color": self._color(color),
-                "label": str(label),
-                "point_size": float(point_size),
-                "alpha": float(alpha),
-            }
-        )
-        return self
-
-    def add_mesh(
-        self,
-        vertices,
-        faces,
-        color,
-        label: str,
-        alpha: float = 0.32,
-    ) -> "VisMultiShape":
-        """加入三角 mesh；颜色使用归一化 RGB。"""
+        """加入点云或三角 mesh；``faces=None`` 时按点云处理。"""
         vertices = self._vertices(vertices)
-        faces = np.asarray(faces, dtype=np.int32)
-        assert 0.0 <= alpha <= 1.0
-        assert faces.ndim == 2 and faces.shape[1] == 3
-        assert len(faces) == 0 or (
-            int(faces.min()) >= 0 and int(faces.max()) < len(vertices)
-        )
+        assert point_size > 0 and 0.0 <= alpha <= 1.0
+        if faces is not None:
+            faces = np.asarray(faces, dtype=np.int32)
+            assert faces.ndim == 2 and faces.shape[1] == 3
+            assert len(faces) == 0 or (
+                int(faces.min()) >= 0 and int(faces.max()) < len(vertices)
+            )
         self.shapes.append(
             {
-                "geometry_type": "mesh",
+                "geometry_type": "mesh" if faces is not None else "point_cloud",
                 "vertices": vertices,
                 "faces": faces,
                 "color": self._color(color),
                 "label": str(label),
-                "point_size": None,
+                "point_size": None if faces is not None else float(point_size),
                 "alpha": float(alpha),
             }
         )

@@ -1,7 +1,11 @@
 # directories
-.vscode/
 output*/
+
+# ai/ide
+.vscode/
 .qoder/
+.agents/
+.codex/
 
 # files
 

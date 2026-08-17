@@ -33,6 +33,8 @@ use `/init` in AGENTS for directly create this doc.
       5. 测试结束后应同时删除 `code/test_debug/` 中的一次性实现、正式代码中的全部临时 hook，以及仅为该测试增加的配置和依赖。
       6. 清理后运行 `rg -n "test_debug|TEST_DEBUG" code` 检查残留，并确认正式代码可在没有 `code/test_debug/` 实现的情况下独立运行。
       7. 不允许提交依赖被忽略 `code/test_debug/` 文件的正式代码。
+   5. 易读性与代码精简
+      1. 禁止过度数据校验
 3. 信息更新
    1. 写代码需要附带注释
    2. 代码文档维护统一遵循 `_linycs/docs/doc-maintenance.md`

@@ -1,6 +1,7 @@
 import logging
 
 from termcolor import colored
+from tqdm import tqdm
 
 class Logger:
     def __init__(
@@ -25,7 +26,7 @@ class Logger:
         self.logger = logging.getLogger()
         self.print_ = True
     
-    def message(self, line:str):
+    def info_print(self, line:str):
         self.logger.info(line)
         print(colored(line, 'green'))
 
@@ -51,3 +52,14 @@ class Logger:
     
     def exception(self, line:str):
         self.logger.exception(line)
+
+    def process(self, iterable=None, description=None, total=None, unit='frame'):
+        """
+        为序列处理或手动更新显示 tqdm 进度条。
+        使用：
+        with logger.process(iterable, desc, total) as pbar:
+            for ...
+                pbar.set_description("new description")
+                pbar.update(1)
+        """
+        return tqdm(iterable, desc=description, total=total, unit=unit)
