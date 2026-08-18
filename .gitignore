@@ -1,5 +1,6 @@
 # directories
 output*/
+_local/
 
 # ai/ide
 .vscode/

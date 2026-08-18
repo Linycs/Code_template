@@ -6,7 +6,7 @@ use `/init` in AGENTS for directly create this doc.
 
 - conda_env: TODO
 - git_branch: TODO
-- code_entrance: TODO
+- code_entrance: run_entrance.sh / run_entrance.bat
 
 ## Global setting
 
@@ -64,6 +64,7 @@ use `/init` in AGENTS for directly create this doc.
       1. docker外: /newdata/workspace_kaisheng
       2. docker内: /workspace
    3. 主程序入口: `code_entrance`
+      1. bash/bat 文件没有用户明确要求时，默认使用 "顶部定义变量" + "代码运行使用变量" 的方式，而不是在终端运行 bash/bat 文件时传入变量
 3. 分支配置
    1. 当前项目基于git进行管理
       1. 每次读取代码内容之前注意先 `git branch` 读取当前所在分支
