@@ -3,7 +3,7 @@
 > 文档维护信息
 >
 > - 更新规则：[doc-maintenance.md](./doc-maintenance.md)
-> - 管辖范围：`code/**`、`env/**`、`run.sh`、`run.bat`
+> - 管辖范围：`code/**`、`env/**`、`run_entrance.sh`、`run_entrance.bat`
 > - 更新条件：目录或模块增删改名、模块职责、依赖方向、主要调用链、配置结构、运行入口或输入输出位置发生变化
 
 本仓库是项目初始化模板。具体项目复制后应保留分层原则，删除不需要的占位模块，并根据实际代码整体更新本文档。系统目标、数据契约和设计决策见 [design.md](./design.md)。
@@ -28,8 +28,8 @@ Code_template/
 ├── env/                       # 依赖、Docker 和环境初始化模板
 ├── AGENTS.md                  # AI 协作、授权和文档维护规则模板
 ├── README.md                  # 模板使用说明
-├── run.sh                     # Linux 入口占位，复制模板后补齐
-└── run.bat                    # Windows 入口模板
+├── run_entrance.sh                     # Linux 入口占位，复制模板后补齐
+└── run_entrance.bat                    # Windows 入口模板
 ```
 
 ## 2. 依赖方向
@@ -43,7 +43,7 @@ Code_template/
 ## 3. 运行链路
 
 ```text
-run.sh / run.bat（入口模板，按项目补齐）
+run_entrance.sh / run_entrance.bat（入口模板，按项目补齐）
   └─ code/scripts/main.py
       ├─ plan.planner.parse_args
       ├─ CfgParser

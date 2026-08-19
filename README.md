@@ -41,7 +41,7 @@ current code architecture:
 │   └── requirements.txt
 ├── AGENTS.md
 ├── README.md
-└── run.sh
+└── run_entrance.sh
 ```
 
 `code/plan` and `code/execute` are just suggestion.

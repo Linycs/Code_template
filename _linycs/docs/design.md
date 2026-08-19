@@ -3,12 +3,12 @@
 > 文档维护信息
 >
 > - 更新规则：[doc-maintenance.md](./doc-maintenance.md)
-> - 管辖范围：`code/**`、`env/**`、`run.sh`、`run.bat`
+> - 管辖范围：`code/**`、`env/**`、`run_entrance.sh`、`run_entrance.bat`
 > - 更新条件：系统目标、设计原则、数据契约、算法、配置语义、执行流程或关键输入输出发生变化
 
 本文档提供复制模板后的设计基线。新项目应删除不适用的模板说明，并补齐实际目标和约束。
 
-当前 `run.sh` 是空占位，复制模板后必须按 `AGENTS.md` 中的 `code_entrance` 补齐实际入口；`run.bat` 同样应按目标平台核对。
+当前 `run_entrance.sh` 是空占位，复制模板后必须按 `AGENTS.md` 中的 `code_entrance` 补齐实际入口；`run_entrance.bat` 同样应按目标平台核对。
 
 ## 1. 系统目标
 
