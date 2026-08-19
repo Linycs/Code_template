@@ -35,12 +35,16 @@ use `/init` in AGENTS for directly create this doc.
       7. 不允许提交依赖被忽略 `code/test_debug/` 文件的正式代码。
    5. 易读性与代码精简
       1. 禁止过度数据校验
+   6. 部分固定规则
+      1. 涉及序列处理部分使用进度条(e.g. code/utils/logger.py的 Logger.process函数)
+      2. 涉及2d序列输出应输出视频，每帧至少加上帧索引tag.
 3. 信息更新
    1. 写代码需要附带注释
    2. 代码文档维护统一遵循 `_linycs/docs/doc-maintenance.md`
    3. 受代码变更维护的文档：
       1. `_linycs/docs/architecture.md`
       2. `_linycs/docs/design.md`
+      3. `_linycs/docs/data_io.md`
    4. 读取受维护文档时，只先读取开头的维护信息；按其管辖范围执行 freshness 检查后，再将正文作为当前代码依据
    5. 用户明确授权修改某受维护文档管辖范围内的代码时，该授权同时包含按维护规则判断为必要的文档同步，无需另行询问；该授权不扩展代码修改范围
    6. 修改完成后若判断文档无需更新，则保持文档不变，不通过无意义改动刷新其 Git 记录
