@@ -115,7 +115,7 @@ def _check_conflict(base_dict, new_dict):
 def initialize_paths(cfg_parser: CfgParser, ):
     """
     创建本次输出目录并写回配置：
-    同时保存 config.yaml 快照并备份代码目录（output.backup）。
+    同时保存 config.yaml 快照并备份代码目录（output.backup.dir_list）。
     """
     output_dir = cfg_parser["output.concrete_dir"]
 
@@ -125,12 +125,13 @@ def initialize_paths(cfg_parser: CfgParser, ):
 
     cfg_parser.dump(os.path.join(output_dir, "config.yaml"))
 
-    backup_dir = path_dict["backup"]
-    for folder in cfg_parser["output.backup"]:
-        src = os.path.join(os.path.dirname(__file__), "../..", folder)
-        dst = os.path.join(backup_dir, folder)
+    if cfg_parser["output.backup.do_backup"]:
+        backup_dir = path_dict["backup"]
+        for folder in cfg_parser["output.backup.dir_list"]:
+            src = os.path.join(os.path.dirname(__file__), "../..", folder)
+            dst = os.path.join(backup_dir, folder)
 
-        if os.path.exists(dst):
-            shutil.rmtree(dst)
-        shutil.copytree(src, dst)
-        print(f" [+] Backup: {src} -> {dst}")
+            if os.path.exists(dst):
+                shutil.rmtree(dst)
+            shutil.copytree(src, dst)
+            print(f" [+] Backup: {src} -> {dst}")
