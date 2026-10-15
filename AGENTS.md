@@ -78,3 +78,4 @@ use `/init` in AGENTS for directly create this doc.
       1. 项目维护文档统一放在 `_linycs/docs/`
    2. _local 用来放不应被 git 追踪的本地运行代码、文档等
       1. _local/ai_log 用于存放 ai 工作过程的输出，文件格式为 "{Agent_name}_{timestamp}.log", 比如 claude_260731-140800.log
+      2. _local/docs/plan 用于放计划文档，建议用 plan_outline.md 作为大目标的整体框架， plan_concrete.md 作为具体某一子任务的详细计划。已经完成的计划应在 plan_outline.md 中打勾或标注。
